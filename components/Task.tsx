@@ -1,27 +1,24 @@
-import { Box, Button, Icon, ToastId, useToast } from "@chakra-ui/react"
+import React, { ChangeEvent, useEffect, useRef, useState } from "react"
 import parse from "html-react-parser"
-import styles from '../../styles/Home.module.css'
+import axios from "axios"
 import {
-  Accordion,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
   Stack,
   HStack,
-  VStack,
   StackDivider,
-  Flex,
-  Center,
-  Square,
   Text,
-  Textarea
+  Textarea,
+  Box, 
+  Button, 
+  ToastId, 
+  useToast 
 } from '@chakra-ui/react'
 import { CheckCircleIcon, SmallCloseIcon, InfoOutlineIcon } from '@chakra-ui/icons'
-import React, { ChangeEvent, useEffect, useRef, useState } from "react"
-import axios from "axios"
 
-export default function Task({ task }: any) {
+const Task = ({ task }: { task: any }) => {
   const baseURL = process.env.NEXT_PUBLIC_ASANA_API_BASE_URL
   const cfDesignId = process.env.NEXT_PUBLIC_ASANA_CF_DESIGN_ID ? process.env.NEXT_PUBLIC_ASANA_CF_DESIGN_ID : ''
   const cfApproveId = process.env.NEXT_PUBLIC_ASANA_CF_APPROVE_ID ? process.env.NEXT_PUBLIC_ASANA_CF_APPROVE_ID : ''
@@ -55,7 +52,7 @@ export default function Task({ task }: any) {
       position: 'top-right'
     })
     try {
-      let custom_fields: any = {}
+      const custom_fields: any = {}
       custom_fields[`${cfDesignId}`] = cf === 'approve' ? cfApproveId : (cf === 'reject' ? cfRejectId : '')
 
       await axios.put(`${baseURL}/tasks/${task.gid}`, {
@@ -128,7 +125,7 @@ export default function Task({ task }: any) {
       position: 'top-right'
     })
     try {
-      let custom_fields: any = {}
+      const custom_fields: any = {}
       custom_fields[`${cfDesignId}`] = cfApproveId
 
       const cfResult = await axios.put(`${baseURL}/tasks/${task.gid}`, {
@@ -147,7 +144,6 @@ export default function Task({ task }: any) {
         const stResult = await axios.post(`${baseURL}/tasks/${task.gid}/stories`, {
           data: {
             "is_pinned": false,
-            // "sticker_name": "green_checkmark",
             "text": comment
           }
         }, {
@@ -203,7 +199,7 @@ export default function Task({ task }: any) {
       <h2>
         <AccordionButton _expanded={{ bg: 'tomato', color: 'white' }}>
           <Box flex='1' textAlign='left'>
-            { task.name } - { task.memberships[0].section.name }
+            { task?.name } - { task?.memberships[0].section.name }
           </Box>
           <AccordionIcon />
         </AccordionButton>
@@ -250,13 +246,15 @@ export default function Task({ task }: any) {
             />
           </Stack>
           <Stack direction='column' spacing={4} p='4'>
-            <Text fontSize='20' fontWeight='bold'>{task.name}</Text>
+            <Text fontSize='20' fontWeight='bold'>{task?.name}</Text>
             <div color="white">
-              { parse(task.html_notes.replace("<body>", "").replace("</body>", "")) }
+              { parse(task?.html_notes.replace("<body>", "").replace("</body>", "")) }
             </div>
           </Stack>
         </HStack>
       </AccordionPanel>
-  </AccordionItem>
+    </AccordionItem>
   )
 }
+
+export default Task

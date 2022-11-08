@@ -1,7 +1,8 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 
-const useTasks = (projectId: any) => {
+const useTasks = (projectId: string | undefined) => {
+  
   const baseURL = process.env.NEXT_PUBLIC_ASANA_API_BASE_URL
   
   const [data, setData] = useState<any>(null)
@@ -10,6 +11,9 @@ const useTasks = (projectId: any) => {
   const [loading, setLoading] = useState<boolean>(true)
 
   const getTasks = async () => {
+    if(!projectId){
+      return
+    }
     try {
       setLoading(true)
       const result = await axios.get(`${baseURL}/projects/${projectId}/tasks`, {

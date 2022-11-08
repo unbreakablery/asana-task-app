@@ -1,20 +1,14 @@
-import Image from 'next/image'
+import { NextPage } from 'next';
+import { useEffect, useRef } from 'react';
 import styles from '../styles/Home.module.css'
-import Header from './components/header'
-import Footer from './components/footer'
-import Task from './components/Task'
-import { useState, useEffect, useRef } from 'react';
-import { Flex, useToast, Accordion, Button, Stack, ToastId } from '@chakra-ui/react'
-import useTasks from './hooks/useTasks'
+import Header from '../components/header'
+import Footer from '../components/footer'
+import useTasks from '../hooks/useTasks'
+import Task from '../components/Task'
+import { useToast, Accordion, Button, Stack, ToastId } from '@chakra-ui/react'
 import { RepeatIcon } from '@chakra-ui/icons'
-import { Http2ServerRequest } from 'http2'
 
-interface ITask {
-  id: number
-  name: string
-}
-
-export default function Home() {
+ const Home: NextPage = () => {
   const projectId = process.env.NEXT_PUBLIC_ASANA_PROJECT_ID
 
   const toast = useToast()
@@ -50,7 +44,7 @@ export default function Home() {
         if (toastRefId.current) {
           toast.close(toastRefId.current)
         }
-        
+
         toast({
           title: 'Fetched tasks successfully!',
           // description: '',
@@ -63,6 +57,7 @@ export default function Home() {
     }
   }, [loading])
 
+  if(!tasks) return null;
 
   return (
     <div className={styles.container}>
@@ -77,6 +72,7 @@ export default function Home() {
             colorScheme='blue'
             leftIcon={<RepeatIcon />}
             onClick={handleRefresh}
+            disabled={ loading ? true : false }
           >
             Refresh
           </Button>
@@ -92,3 +88,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default Home
