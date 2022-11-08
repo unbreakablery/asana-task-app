@@ -57,8 +57,6 @@ import { RepeatIcon } from '@chakra-ui/icons'
     }
   }, [loading])
 
-  if(!tasks) return null;
-
   return (
     <div className={styles.container}>
       <Header title="Asana Task App" description="Asana Task App" />
