@@ -24,27 +24,26 @@ import { RepeatIcon } from '@chakra-ui/icons'
     if (loading) {
       toastRefId.current = toast({
         title: 'Loading...',
-        // description: '',
         status: 'info',
-        // duration: 5000,
+        duration: null,
         isClosable: true,
         position: 'top-right'
       })
     } else {
       if (isError) {
+        if (toastRefId.current) {
+          toast.close(toastRefId.current)
+        }
+
         toast({
           title: 'Error',
-          description: error.message,
+          description: error.response.data.errors[0].message,
           status: 'error',
           duration: 5000,
           isClosable: true,
           position: 'top-right'
         })
       } else {
-        if (toastRefId.current) {
-          toast.close(toastRefId.current)
-        }
-
         toast({
           title: 'Fetched tasks successfully!',
           // description: '',
